@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Contractor Dashboard — Carlisle</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body{font-family:Inter, system-ui, -apple-system, Arial, sans-serif;background:#f3f7f6;margin:0}
+    .topbar{display:flex;align-items:center;justify-content:space-between;padding:18px 28px;background:#0f2430;color:white}
+    .brand{display:flex;align-items:center;gap:12px}
+    .container{max-width:1100px;margin:28px auto;padding:0 18px}
+    .grid{display:grid;grid-template-columns:1fr 320px;gap:20px}
+    .card{background:white;padding:18px;border-radius:10px;box-shadow:0 6px 18px rgba(20,20,20,0.06)}
+    h2{margin:0 0 8px}
+    .projects li{margin:10px 0;padding:10px;border-radius:8px;border:1px solid #eef7f6;list-style:none}
+    .actions{display:flex;gap:8px;margin-top:12px}
+    .btn{padding:10px 12px;border-radius:8px;border:none;background:#c62828;color:white;cursor:pointer}
+    .secondary{background:#eef7f6;color:#0f2430}
+    .muted{color:#6b6b6b}
+    .meta{font-size:13px;color:#586a6b}
+    @media(max-width:880px){.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="brand">
+      <div style="width:44px;height:44px;border-radius:8px;background:#c62828;display:flex;align-items:center;justify-content:center;font-weight:700">C</div>
+      <div>
+        <div style="font-weight:700">Carlisle</div>
+        <div style="font-size:12px;opacity:0.9">Contractor Dashboard</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <select id="userRole" style="padding:8px 10px;border-radius:8px;border:none"></select>
+      <div id="userInfo" class="meta"></div>
+      <button id="signOut" class="btn secondary">Sign Out</button>
+    </div>
+  </div>
+
+  <main class="container dashboard">
+    <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin-bottom:18px">
+      <div style="flex:1">
+        <h2 id="welcomeTitle">Welcome</h2>
+        <p id="welcomeDescription" class="muted">Loading...</p>
+      </div>
+      <div style="display:flex;gap:10px">
+        <button onclick="exportDashboardData()" class="btn">Export Data</button>
+      </div>
+    </div>
+
+    <section id="statsSection" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px">
+      <div class="stat-card" style="display:flex;flex-direction:column;align-items:flex-start;padding:12px">
+        <h3>—</h3>
+        <p class="muted">Stat</p>
+      </div>
+      <div class="stat-card" style="display:flex;flex-direction:column;align-items:flex-start;padding:12px">
+        <h3>—</h3>
+        <p class="muted">Stat</p>
+      </div>
+      <div class="stat-card" style="display:flex;flex-direction:column;align-items:flex-start;padding:12px">
+        <h3>—</h3>
+        <p class="muted">Stat</p>
+      </div>
+      <div class="stat-card" style="display:flex;flex-direction:column;align-items:flex-start;padding:12px">
+        <h3>—</h3>
+        <p class="muted">Stat</p>
+      </div>
+    </section>
+
+    <div class="grid">
+      <section>
+        <div style="padding:18px;border-radius:10px;box-shadow:0 6px 18px rgba(20,20,20,0.06);background:#1e3a5f">
+          <h3 style="color:#e8f0f7">Features</h3>
+          <p class="muted" style="color:#b0c4de">Tools available to you</p>
+          <div id="featuresGrid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px"></div>
+        </div>
+
+        <div id="activitySection" style="margin-top:16px;padding:18px;border-radius:10px;box-shadow:0 6px 18px rgba(20,20,20,0.06);background:#1e3a5f">
+          <h3 style="color:#e8f0f7">Recent Activity</h3>
+          <div id="activityList" style="margin-top:10px"></div>
+        </div>
+      </section>
+
+      <aside>
+        <!-- Permissions panel intentionally removed -->
+      </aside>
+    </div>
+  </main>
+
+  <!-- Load roleConfig and main app logic, then finish session wiring -->
+  <script src="roleConfig.js"></script>
+
+  <script>
+    // Populate role selector from roleConfig (so app.js can attach handlers)
+    (function populateRoles(){
+      const roleDropdown = document.getElementById('userRole');
+      if(!window.roleConfig) return;
+      Object.keys(roleConfig).forEach(rk=>{
+        const opt = document.createElement('option');
+        opt.value = rk; opt.textContent = roleConfig[rk].name || rk;
+        roleDropdown.appendChild(opt);
+      });
+    })();
+  </script>
+
+  <script src="app.js"></script>
+
+  <script>
+    // After app.js initializes, wire session and set role
+    (function finishInit(){
+      const session = sessionStorage.getItem('demoUser');
+      if(!session){
+        location.href = 'index.html';
+        return;
+      }
+      const user = JSON.parse(session || '{}');
+
+      // map role label (from index.html) like 'Contractor' to roleConfig key 'contractor'
+      function normalize(roleLabel){
+        return (roleLabel || '').toString().toLowerCase().replace(/\s+/g,'-');
+      }
+
+      const roleKey = normalize(user.role) || 'contractor';
+      const roleDropdown = document.getElementById('userRole');
+      if(roleDropdown){
+        if(Array.from(roleDropdown.options).some(o=>o.value===roleKey)){
+          roleDropdown.value = roleKey;
+        }
+      }
+
+      // Display user info
+      const userInfo = document.getElementById('userInfo');
+      if(userInfo) userInfo.textContent = (user.name || user.email || '') + ' • ' + (user.role || '');
+
+      // Ask app.js to render dashboard for this role
+      if(typeof updateDashboard === 'function'){
+        updateDashboard(roleKey);
+      }
+
+      // Sign out
+      document.getElementById('signOut').addEventListener('click', ()=>{
+        sessionStorage.removeItem('demoUser');
+        location.href = 'index.html';
+      });
+    })();
+  </script>
+</body>
+</html>

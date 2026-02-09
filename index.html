@@ -1,0 +1,180 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Carlisle — Login</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Minimal page-specific styles to ensure layout looks good even without full project CSS */
+    :root{--accent:#c62828;--muted:#6b6b6b}
+    body{font-family:Inter, system-ui, -apple-system, Arial, sans-serif;background:#f6faf9;margin:0;display:flex;align-items:center;justify-content:center;height:100vh}
+    .card{width:960px;max-width:96%;background:white;border-radius:14px;box-shadow:0 6px 30px rgba(20,20,20,0.12);padding:32px}
+    .brand{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+    .brand img{height:36px}
+    h1{margin:0 0 6px 0;font-size:20px}
+    p.lead{margin:0;color:var(--muted);font-size:13px}
+    .grid{display:grid;grid-template-columns:1fr 360px;gap:24px}
+    .left{padding-right:8px}
+    .roles{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:18px 0}
+    .role-card{border:1px solid #e6efee;border-radius:8px;padding:16px;background:#fcfffe;text-align:center}
+    label{display:block;font-weight:600;margin:12px 0 6px;font-size:13px}
+    select,input{width:100%;padding:12px;border-radius:8px;border:1px solid #e6efee;background:white}
+    .btn{display:inline-block;background:var(--accent);color:white;padding:12px 18px;border-radius:8px;border:none;width:100%;font-weight:700;margin-top:14px;cursor:pointer}
+    .muted{color:var(--muted);font-size:13px;text-align:center;margin-top:8px}
+    @media(max-width:880px){.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="card" role="main">
+    <div class="brand">
+      <img src="" alt="Carlisle logo" aria-hidden="true">
+      <div>
+        <h1>Welcome back</h1>
+        <p class="lead">Sign in to access your projects</p>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="left">
+        <form id="loginForm" onsubmit="return false;" aria-label="Sign in form">
+          <label for="role">Role</label>
+          <select id="role" aria-describedby="roleHelp"></select>
+
+          <label for="user">User</label>
+          <select id="user"></select>
+
+          <label for="email">Email</label>
+          <input id="email" type="email" placeholder="you@company.com">
+
+          <label for="password">Password</label>
+          <input id="password" type="password" placeholder="Password">
+
+          <button id="signInBtn" class="btn">Sign In</button>
+        </form>
+      </div>
+
+      <div>
+        <div style="background:#fbfbfb;border-radius:8px;padding:18px">
+          <h3 style="margin-top:0">Quick sign-in</h3>
+          <p class="muted">Choose a role, pick a user, and sign in with the demo credentials (this is a local demo only).</p>
+
+          <div style="margin-top:8px">
+            <strong>Demo users:</strong>
+            <ul id="userList" style="margin:8px 0 0 18px;padding:0"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Demo user data grouped by role
+    const demo = {
+      "Contractor": [
+        {name: 'Alex Morgan', email: 'alex@contractor.com', pw: 'contractor1'},
+        {name: 'Priya Singh', email: 'priya@contractor.com', pw: 'contractor2'}
+      ],
+      "Sales Rep": [
+        {name: 'Jordan Blake', email: 'jordan@sales.com', pw: 'sales123'},
+        {name: 'Samira Khan', email: 'samira@sales.com', pw: 'sales456'}
+      ],
+      "Field Inspector": [
+        {name: 'Miguel Torres', email: 'miguel@inspect.com', pw: 'inspect1'}
+      ],
+      "Internal Team": [
+        {name: 'Taylor Reed', email: 'taylor@internal.com', pw: 'internal'},
+        {name: 'Chris P.', email: 'chris@internal.com', pw: 'internal2'}
+      ]
+    };
+
+    const roleEl = document.getElementById('role');
+    const userEl = document.getElementById('user');
+    const emailEl = document.getElementById('email');
+    const pwEl = document.getElementById('password');
+    const userListEl = document.getElementById('userList');
+
+    // Populate roles select
+    function initRoles(){
+      Object.keys(demo).forEach((r, i)=>{
+        const opt = document.createElement('option');
+        opt.value = r; opt.textContent = r;
+        roleEl.appendChild(opt);
+      });
+      roleEl.addEventListener('change', onRoleChange);
+    }
+
+    function onRoleChange(){
+      const role = roleEl.value;
+      populateUsers(role);
+      renderUserList(role);
+    }
+
+    function populateUsers(role){
+      userEl.innerHTML='';
+      const users = demo[role] || [];
+      users.forEach((u, idx)=>{
+        const o = document.createElement('option');
+        o.value = idx; o.textContent = u.name + ' — ' + u.email;
+        userEl.appendChild(o);
+      });
+      // auto-select first user and fill email/password
+      if(users.length){
+        userEl.value = 0;
+        fillCredentials(users[0]);
+      } else {
+        emailEl.value = '';
+        pwEl.value = '';
+      }
+    }
+
+    function fillCredentials(user){
+      emailEl.value = user.email;
+      pwEl.value = user.pw;
+    }
+
+    userEl.addEventListener('change', ()=>{
+      const role = roleEl.value; const users = demo[role] || [];
+      const idx = Number(userEl.value);
+      if(users[idx]) fillCredentials(users[idx]);
+    });
+
+    function renderUserList(role){
+      userListEl.innerHTML='';
+      (demo[role] || []).forEach(u=>{
+        const li = document.createElement('li');
+        li.textContent = u.name + ' — ' + u.email;
+        userListEl.appendChild(li);
+      });
+    }
+
+    document.getElementById('signInBtn').addEventListener('click', ()=>{
+      const role = roleEl.value;
+      const userIdx = Number(userEl.value);
+      const users = demo[role] || [];
+      const user = users[userIdx];
+
+      if(!user){
+        alert('Please select a valid user');
+        return;
+      }
+
+      // Save to sessionStorage and redirect
+      const session = {
+        role: role,
+        name: user.name,
+        email: user.email
+      };
+      sessionStorage.setItem('demoUser', JSON.stringify(session));
+      location.href = 'contractor-dashboard.html';
+    });
+
+    // initialize
+    initRoles();
+    // set initial role
+    roleEl.value = Object.keys(demo)[0];
+    onRoleChange();
+  </script>
+</body>
+</html>
