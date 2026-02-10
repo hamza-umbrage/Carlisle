@@ -10,13 +10,13 @@
     /* Minimal page-specific styles to ensure layout looks good even without full project CSS */
     :root{--accent:#c62828;--muted:#6b6b6b}
     body{font-family:Inter, system-ui, -apple-system, Arial, sans-serif;background:#f6faf9;margin:0;display:flex;align-items:center;justify-content:center;height:100vh}
-    .card{width:960px;max-width:96%;background:white;border-radius:14px;box-shadow:0 6px 30px rgba(20,20,20,0.12);padding:32px}
+    .card{width:480px;max-width:96%;background:white;border-radius:14px;box-shadow:0 6px 30px rgba(20,20,20,0.12);padding:32px;margin:0 auto}
     .brand{display:flex;align-items:center;gap:14px;margin-bottom:18px}
     .brand img{height:36px}
     h1{margin:0 0 6px 0;font-size:20px}
     p.lead{margin:0;color:var(--muted);font-size:13px}
-    .grid{display:grid;grid-template-columns:1fr 360px;gap:24px}
-    .left{padding-right:8px}
+    .grid{display:grid;grid-template-columns:1fr;gap:24px}
+    .left{padding-right:0}
     .roles{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:18px 0}
     .role-card{border:1px solid #e6efee;border-radius:8px;padding:16px;background:#fcfffe;text-align:center}
     label{display:block;font-weight:600;margin:12px 0 6px;font-size:13px}
@@ -55,17 +55,7 @@
         </form>
       </div>
 
-      <div>
-        <div style="background:#fbfbfb;border-radius:8px;padding:18px">
-          <h3 style="margin-top:0">Quick sign-in</h3>
-          <p class="muted">Choose a role, pick a user, and sign in with the demo credentials (this is a local demo only).</p>
-
-          <div style="margin-top:8px">
-            <strong>Demo users:</strong>
-            <ul id="userList" style="margin:8px 0 0 18px;padding:0"></ul>
-          </div>
-        </div>
-      </div>
+      
     </div>
   </div>
 

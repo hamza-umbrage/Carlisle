@@ -264,9 +264,5 @@ For technical support or questions:
 ---
 
 **Version**: 1.0.0  
-**Last Updated**: February 2024
-
-🌐 Live Demo  
-https://hamza-umbrage.github.io/Carlisle/
-
+**Last Updated**: February 2024  
 **Author**: Carlisle Digital Experience Team

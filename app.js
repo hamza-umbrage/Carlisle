@@ -45,7 +45,7 @@ function updateWelcomeSection(config) {
     const description = document.getElementById('welcomeDescription');
     
     title.textContent = `Welcome, ${config.name}`;
-    description.textContent = config.description;
+    description.textContent = '';
 }
 
 // Update statistics section
@@ -97,14 +97,9 @@ function createFeatureCard(feature) {
     }
     
     card.innerHTML = `
-        <div class="feature-icon">${feature.icon}</div>
         <div class="feature-content">
             <h3>${feature.name}</h3>
             <p>${feature.description}</p>
-            ${feature.requiresAuth ? '<span class="auth-badge">Requires Login</span>' : '<span class="public-badge">Public Access</span>'}
-        </div>
-        <div class="feature-status">
-            ${feature.enabled ? '<span class="status-enabled">✓ Available</span>' : '<span class="status-disabled">✗ Not Available</span>'}
         </div>
     `;
     

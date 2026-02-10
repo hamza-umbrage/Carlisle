@@ -369,7 +369,7 @@ body {
 
 .activity-date {
     font-size: 0.8125rem;
-    color: #b0c4de;
+    color: white !important;
 }
 
 .activity-type .type-badge {
@@ -612,9 +612,11 @@ body {
     color: inherit !important;
 }
 .activity-item,
-.activity-item .activity-action,
-.activity-item .activity-date {
+.activity-item .activity-action {
     color: var(--gray-900) !important;
+}
+.activity-item .activity-date {
+    color: white !important;
 }
 
 /* Reduce opacity on disabled cards but keep text readable */
@@ -629,25 +631,39 @@ body {
 .stat-card {
     color: white !important;
 }
-.feature-card .feature-content h3 {
-    color: white !important;
-    opacity: 1 !important;
-}
-.feature-card .feature-content p {
-    color: #ffecec !important;
-    opacity: 1 !important;
-}
-.feature-card .feature-icon {
-    opacity: 1 !important;
-}
+
 .activity-item .activity-action {
     color: var(--gray-900) !important;
     opacity: 1 !important;
 }
 .activity-item .activity-date {
-    color: var(--gray-600) !important;
+    color: white !important;
     opacity: 1 !important;
 }
+
+/* Force all dashboard text to white for consistent contrast */
+/* This scopes to the main dashboard container so other pages (login) are unaffected */
+.dashboard, .dashboard * {
+    color: white !important;
+}
+
+/* Hide feature icons in the Features grid */
+.feature-card .feature-icon,
+.feature-card img,
+.feature-card svg,
+.feature-card [role="img"],
+.feature-card *[class*="icon"],
+.feature-card::before,
+.feature-card::after {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    content: none !important;
+}
+
 
 /* If a dark background is used, ensure light text for contrast */
 .topbar + .dashboard .feature-card.dark,
@@ -661,4 +677,9 @@ body {
 .feature-card.dark .feature-icon {
     color: #e6f3f2 !important;
     opacity: 1 !important;
+}
+
+/* Override welcome title to black font */
+#welcomeTitle {
+    color: black !important;
 }
