@@ -1,4 +1,4 @@
-git commit -m "Update dashboard and login styling - red feature cards, white text, centered form"// Demo Data Configuration
+git commit -m "Update dashboard and login styling - black feature cards, white text, centered form"// Demo Data Configuration
 // This file contains sample data for demonstrating the dashboard with realistic scenarios
 
 const demoData = {
