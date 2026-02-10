@@ -20,6 +20,7 @@
     .secondary{background:#eef7f6;color:#0f2430}
     .muted{color:#6b6b6b}
     .meta{font-size:13px;color:#586a6b}
+    .doc-card:hover{box-shadow:0 4px 12px rgba(0,0,0,0.1);transform:translateY(-1px)}
     @media(max-width:880px){.grid{grid-template-columns:1fr}}
   </style>
 </head>
@@ -177,44 +178,58 @@
     const detailData = {
       activeJobs: [
           { id: '2024-0156', name: 'Commercial Building Reroof', status: 'In Progress', date: '2024-02-05', documents: [
-            { type: 'Product Document', name: 'Spec Sheet.pdf', url: 'docs/2024-0156-spec.pdf' },
-            { type: 'Photo', name: 'Before.jpg', url: 'https://via.placeholder.com/320x200?text=Before+2024-0156' },
-            { type: 'Photo', name: 'After.jpg', url: 'https://via.placeholder.com/320x200?text=After+2024-0156' }
+            { type: 'Product Document', name: 'TPO Spec Sheet.pdf', url: 'docs/2024-0156-spec.pdf', size: '2.3 MB', uploadedBy: 'John Smith', uploadedAt: '2024-01-12' },
+            { type: 'Product Document', name: 'Installation Guide.pdf', url: 'docs/2024-0156-install.pdf', size: '4.1 MB', uploadedBy: 'Carlisle Support', uploadedAt: '2024-01-10' },
+            { type: 'Photo', name: 'Site-Before.jpg', url: 'https://via.placeholder.com/800x480?text=Before+2024-0156', size: '1.8 MB', uploadedBy: 'Foreman', uploadedAt: '2024-01-14' },
+            { type: 'Photo', name: 'Site-Progress-01.jpg', url: 'https://via.placeholder.com/800x480?text=Progress+2024-0156', size: '2.1 MB', uploadedBy: 'Crew Lead', uploadedAt: '2024-02-01' },
+            { type: 'Photo', name: 'Site-Progress-02.jpg', url: 'https://via.placeholder.com/800x480?text=Progress+2+2024-0156', size: '1.9 MB', uploadedBy: 'Crew Lead', uploadedAt: '2024-02-03' }
           ] },
           { id: '2024-0155', name: 'Residential Roof Replacement', status: 'In Progress', date: '2024-02-04', documents: [
-            { type: 'Product Document', name: 'Shingle Data.pdf', url: 'docs/2024-0155-shingle.pdf' },
-            { type: 'Photo', name: 'Site.jpg', url: 'https://via.placeholder.com/320x200?text=Site+2024-0155' }
+            { type: 'Product Document', name: 'Shingle Data Sheet.pdf', url: 'docs/2024-0155-shingle.pdf', size: '1.5 MB', uploadedBy: 'Sarah Johnson', uploadedAt: '2024-01-20' },
+            { type: 'Warranty Document', name: 'Manufacturer Warranty.pdf', url: 'docs/2024-0155-warranty.pdf', size: '680 KB', uploadedBy: 'Admin', uploadedAt: '2024-01-22' },
+            { type: 'Photo', name: 'Before-Front.jpg', url: 'https://via.placeholder.com/800x480?text=Front+2024-0155', size: '2.4 MB', uploadedBy: 'Foreman', uploadedAt: '2024-01-25' },
+            { type: 'Photo', name: 'Before-Rear.jpg', url: 'https://via.placeholder.com/800x480?text=Rear+2024-0155', size: '2.2 MB', uploadedBy: 'Foreman', uploadedAt: '2024-01-25' }
           ] },
           { id: '2024-0154', name: 'Industrial Facility Roofing', status: 'In Progress', date: '2024-02-03', documents: [
-            { type: 'Product Document', name: 'Membrane Spec.pdf', url: 'docs/2024-0154-membrane.pdf' },
-            { type: 'Photo', name: 'Overview.jpg', url: 'https://via.placeholder.com/320x200?text=Overview+2024-0154' }
+            { type: 'Product Document', name: 'EPDM Membrane Spec.pdf', url: 'docs/2024-0154-membrane.pdf', size: '3.1 MB', uploadedBy: 'John Smith', uploadedAt: '2024-01-18' },
+            { type: 'Product Document', name: 'Safety Data Sheet.pdf', url: 'docs/2024-0154-sds.pdf', size: '420 KB', uploadedBy: 'Carlisle Support', uploadedAt: '2024-01-18' },
+            { type: 'Photo', name: 'Aerial-Overview.jpg', url: 'https://via.placeholder.com/800x480?text=Aerial+2024-0154', size: '3.5 MB', uploadedBy: 'Drone Operator', uploadedAt: '2024-01-20' },
+            { type: 'Inspection Report', name: 'Pre-Install Inspection.pdf', url: 'docs/2024-0154-inspection.pdf', size: '1.2 MB', uploadedBy: 'Mike Williams', uploadedAt: '2024-01-19' }
           ] },
           { id: '2024-0153', name: 'Mall Roof Repair', status: 'Pending', date: '2024-02-02', documents: [
-            { type: 'Product Document', name: 'Repair Plan.pdf', url: 'docs/2024-0153-plan.pdf' }
+            { type: 'Product Document', name: 'Repair Plan.pdf', url: 'docs/2024-0153-plan.pdf', size: '890 KB', uploadedBy: 'John Smith', uploadedAt: '2024-01-28' },
+            { type: 'Product Document', name: 'Material List.pdf', url: 'docs/2024-0153-materials.pdf', size: '320 KB', uploadedBy: 'Estimator', uploadedAt: '2024-01-29' }
           ] },
           { id: '2024-0152', name: 'Office Complex Reroof', status: 'Pending', date: '2024-02-01', documents: [
-            { type: 'Photo', name: 'Access Point.jpg', url: 'https://via.placeholder.com/320x200?text=Access+2024-0152' }
+            { type: 'Photo', name: 'Access-Point.jpg', url: 'https://via.placeholder.com/800x480?text=Access+2024-0152', size: '1.6 MB', uploadedBy: 'Site Manager', uploadedAt: '2024-01-30' },
+            { type: 'Photo', name: 'Current-Condition.jpg', url: 'https://via.placeholder.com/800x480?text=Condition+2024-0152', size: '2.0 MB', uploadedBy: 'Site Manager', uploadedAt: '2024-01-30' },
+            { type: 'Product Document', name: 'Scope of Work.pdf', url: 'docs/2024-0152-scope.pdf', size: '1.1 MB', uploadedBy: 'John Smith', uploadedAt: '2024-01-28' }
           ] },
           { id: '2024-0151', name: 'Warehouse Roof Maintenance', status: 'Pending', date: '2024-01-31', documents: [
-            { type: 'Product Document', name: 'Maintenance Checklist.pdf', url: 'docs/2024-0151-checklist.pdf' }
+            { type: 'Product Document', name: 'Maintenance Checklist.pdf', url: 'docs/2024-0151-checklist.pdf', size: '540 KB', uploadedBy: 'Admin', uploadedAt: '2024-01-25' }
           ] },
           { id: '2024-0150', name: 'High-Rise Building Inspection', status: 'Planning', date: '2024-01-30', documents: [
-            { type: 'Product Document', name: 'Inspection Criteria.pdf', url: 'docs/2024-0150-criteria.pdf' }
+            { type: 'Product Document', name: 'Inspection Criteria.pdf', url: 'docs/2024-0150-criteria.pdf', size: '780 KB', uploadedBy: 'Inspector', uploadedAt: '2024-01-22' },
+            { type: 'Product Document', name: 'Building Specs.pdf', url: 'docs/2024-0150-building.pdf', size: '5.2 MB', uploadedBy: 'Property Manager', uploadedAt: '2024-01-20' }
           ] },
           { id: '2024-0149', name: 'School Roof Assessment', status: 'Planning', date: '2024-01-29', documents: [
-            { type: 'Photo', name: 'North Wing.jpg', url: 'https://via.placeholder.com/320x200?text=North+Wing+2024-0149' }
+            { type: 'Photo', name: 'North-Wing.jpg', url: 'https://via.placeholder.com/800x480?text=North+Wing+2024-0149', size: '2.8 MB', uploadedBy: 'Site Surveyor', uploadedAt: '2024-01-20' },
+            { type: 'Photo', name: 'South-Wing.jpg', url: 'https://via.placeholder.com/800x480?text=South+Wing+2024-0149', size: '2.6 MB', uploadedBy: 'Site Surveyor', uploadedAt: '2024-01-20' }
           ] },
           { id: '2024-0148', name: 'Healthcare Facility Roofing', status: 'Planning', date: '2024-01-28', documents: [
-            { type: 'Product Document', name: 'Material Datasheet.pdf', url: 'docs/2024-0148-datasheet.pdf' }
+            { type: 'Product Document', name: 'Material Datasheet.pdf', url: 'docs/2024-0148-datasheet.pdf', size: '1.8 MB', uploadedBy: 'Carlisle Support', uploadedAt: '2024-01-15' },
+            { type: 'Warranty Document', name: 'Extended Warranty Options.pdf', url: 'docs/2024-0148-warranty.pdf', size: '450 KB', uploadedBy: 'Admin', uploadedAt: '2024-01-16' }
           ] },
           { id: '2024-0147', name: 'Retail Building Repair', status: 'Planning', date: '2024-01-27', documents: [
-            { type: 'Photo', name: 'Entrance.jpg', url: 'https://via.placeholder.com/320x200?text=Entrance+2024-0147' }
+            { type: 'Photo', name: 'Entrance-Damage.jpg', url: 'https://via.placeholder.com/800x480?text=Entrance+2024-0147', size: '1.9 MB', uploadedBy: 'Foreman', uploadedAt: '2024-01-18' }
           ] },
           { id: '2024-0146', name: 'Government Building Reroof', status: 'Not Started', date: '2024-01-26', documents: [
-            { type: 'Product Document', name: 'Bid Docs.pdf', url: 'docs/2024-0146-bid.pdf' }
+            { type: 'Product Document', name: 'Bid Documents.pdf', url: 'docs/2024-0146-bid.pdf', size: '3.4 MB', uploadedBy: 'Estimator', uploadedAt: '2024-01-10' },
+            { type: 'Product Document', name: 'Compliance Requirements.pdf', url: 'docs/2024-0146-compliance.pdf', size: '1.1 MB', uploadedBy: 'Admin', uploadedAt: '2024-01-12' }
           ] },
           { id: '2024-0145', name: 'Apartment Complex Maintenance', status: 'Not Started', date: '2024-01-25', documents: [
-            { type: 'Product Document', name: 'Warranty Info.pdf', url: 'docs/2024-0145-warranty.pdf' }
+            { type: 'Warranty Document', name: 'Existing Warranty Info.pdf', url: 'docs/2024-0145-warranty.pdf', size: '620 KB', uploadedBy: 'Property Manager', uploadedAt: '2024-01-08' },
+            { type: 'Product Document', name: 'Maintenance Schedule.pdf', url: 'docs/2024-0145-schedule.pdf', size: '380 KB', uploadedBy: 'Admin', uploadedAt: '2024-01-09' }
           ] }
       ],
       pendingInspections: [
@@ -366,6 +381,186 @@
           card.style.boxShadow = 'none';
         });
       });
+    }
+
+    // ── Document Viewer ─────────────────────────────────────────────
+    // Opens the doc modal with documents for a given job ID
+    function openJobDocuments(jobId) {
+      var job = null;
+      for (var i = 0; i < detailData.activeJobs.length; i++) {
+        if (detailData.activeJobs[i].id === jobId) {
+          job = detailData.activeJobs[i];
+          break;
+        }
+      }
+      if (!job) return;
+
+      var docs = job.documents || [];
+      var modal = document.getElementById('docModal');
+      var titleEl = document.getElementById('docModalTitle');
+      var contentEl = document.getElementById('docModalContent');
+
+      titleEl.textContent = 'Documents — ' + job.name + ' (' + job.id + ')';
+
+      // Group documents by type
+      var groups = {};
+      docs.forEach(function(doc) {
+        var key = doc.type || 'Other';
+        if (!groups[key]) groups[key] = [];
+        groups[key].push(doc);
+      });
+
+      var html = '';
+
+      // Job summary header
+      html += '<div style="display:flex;gap:16px;align-items:center;padding:12px 16px;background:#f0f7ff;border-radius:8px;margin-bottom:20px;flex-wrap:wrap">';
+      html += '<div style="flex:1;min-width:200px">';
+      html += '<div style="font-weight:600;color:#1e3a5f;font-size:15px">' + escapeHtml(job.name) + '</div>';
+      html += '<div style="color:#586a6b;font-size:13px;margin-top:2px">Job #' + escapeHtml(job.id) + ' &middot; Created ' + escapeHtml(job.date) + '</div>';
+      html += '</div>';
+      html += '<div>' + getStatusBadge(job.status) + '</div>';
+      html += '<div style="color:#586a6b;font-size:13px"><strong>' + docs.length + '</strong> document' + (docs.length !== 1 ? 's' : '') + '</div>';
+      html += '</div>';
+
+      if (docs.length === 0) {
+        html += '<div style="text-align:center;padding:40px 20px;color:#6b7280">';
+        html += '<div style="font-size:48px;margin-bottom:12px;opacity:0.4">&#128196;</div>';
+        html += '<p style="font-size:15px;margin:0">No documents uploaded for this job yet.</p>';
+        html += '</div>';
+      } else {
+        // Render each group
+        var groupOrder = ['Product Document', 'Warranty Document', 'Inspection Report', 'Photo', 'Other'];
+        var groupIcons = {
+          'Product Document': '&#128209;',
+          'Warranty Document': '&#128203;',
+          'Inspection Report': '&#128203;',
+          'Photo': '&#128247;',
+          'Other': '&#128196;'
+        };
+
+        groupOrder.forEach(function(groupName) {
+          if (!groups[groupName] || groups[groupName].length === 0) return;
+
+          html += '<div style="margin-bottom:20px">';
+          html += '<h3 style="font-size:14px;color:#374151;margin:0 0 10px;display:flex;align-items:center;gap:6px">';
+          html += '<span>' + (groupIcons[groupName] || '&#128196;') + '</span> ';
+          html += escapeHtml(groupName) + 's';
+          html += '<span style="background:#e5e7eb;color:#6b7280;font-size:11px;padding:2px 8px;border-radius:10px;margin-left:4px">' + groups[groupName].length + '</span>';
+          html += '</h3>';
+
+          if (groupName === 'Photo') {
+            // Photo grid with thumbnails
+            html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px">';
+            groups[groupName].forEach(function(doc) {
+              html += '<div class="doc-card" style="border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;transition:box-shadow 200ms,transform 200ms;cursor:pointer" onclick="openImagePreview(\'' + escapeAttr(doc.url) + '\', \'' + escapeAttr(doc.name) + '\')">';
+              html += '<div style="width:100%;height:140px;background:#f3f4f6;display:flex;align-items:center;justify-content:center;overflow:hidden">';
+              html += '<img src="' + escapeAttr(doc.url) + '" alt="' + escapeAttr(doc.name) + '" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display=\'none\';this.parentElement.innerHTML=\'<span style=padding:20px;color:#9ca3af;font-size:40px>&#128247;</span>\'">';
+              html += '</div>';
+              html += '<div style="padding:10px">';
+              html += '<div style="font-weight:500;font-size:13px;color:#1f2937;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="' + escapeAttr(doc.name) + '">' + escapeHtml(doc.name) + '</div>';
+              html += '<div style="font-size:11px;color:#6b7280;margin-top:4px">' + escapeHtml(doc.size || '') + (doc.uploadedBy ? ' &middot; ' + escapeHtml(doc.uploadedBy) : '') + '</div>';
+              html += '<div style="font-size:11px;color:#9ca3af;margin-top:2px">' + escapeHtml(doc.uploadedAt || '') + '</div>';
+              html += '</div>';
+              html += '</div>';
+            });
+            html += '</div>';
+          } else {
+            // File list for PDFs and other documents
+            groups[groupName].forEach(function(doc) {
+              html += '<div class="doc-card" style="display:flex;align-items:center;gap:14px;padding:12px 14px;border:1px solid #e5e7eb;border-radius:8px;margin-bottom:8px;transition:box-shadow 200ms,background 200ms;cursor:default">';
+              html += '<div style="width:42px;height:42px;border-radius:8px;background:#fef2f2;display:flex;align-items:center;justify-content:center;flex-shrink:0">';
+              html += '<span style="font-size:20px;color:#c62828">&#128196;</span>';
+              html += '</div>';
+              html += '<div style="flex:1;min-width:0">';
+              html += '<div style="font-weight:500;font-size:14px;color:#1f2937;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="' + escapeAttr(doc.name) + '">' + escapeHtml(doc.name) + '</div>';
+              html += '<div style="font-size:12px;color:#6b7280;margin-top:2px">';
+              html += escapeHtml(doc.size || 'Unknown size');
+              if (doc.uploadedBy) html += ' &middot; Uploaded by ' + escapeHtml(doc.uploadedBy);
+              if (doc.uploadedAt) html += ' &middot; ' + escapeHtml(doc.uploadedAt);
+              html += '</div>';
+              html += '</div>';
+              html += '<a href="' + escapeAttr(doc.url) + '" target="_blank" rel="noopener" class="doc-btn" style="text-decoration:none;white-space:nowrap;display:flex;align-items:center;gap:4px" onclick="event.stopPropagation()" title="Download ' + escapeAttr(doc.name) + '">&#8681; Download</a>';
+              html += '</div>';
+            });
+          }
+          html += '</div>';
+        });
+      }
+
+      contentEl.innerHTML = html;
+      modal.style.display = 'block';
+    }
+
+    // Close the documents modal
+    function closeDocModal() {
+      document.getElementById('docModal').style.display = 'none';
+    }
+
+    // Close doc modal when clicking outside
+    document.getElementById('docModal').addEventListener('click', function(e) {
+      if (e.target === this) closeDocModal();
+    });
+
+    // Close modals on Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        if (document.getElementById('docModal').style.display === 'block') {
+          closeDocModal();
+        } else if (document.getElementById('detailModal').style.display === 'block') {
+          closeDetailModal();
+        }
+      }
+    });
+
+    // Fullscreen image preview for photos
+    function openImagePreview(url, name) {
+      var overlay = document.createElement('div');
+      overlay.id = 'imagePreviewOverlay';
+      overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:1200;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;cursor:zoom-out';
+      overlay.onclick = function() { overlay.remove(); };
+
+      var header = document.createElement('div');
+      header.style.cssText = 'color:white;font-size:14px;margin-bottom:12px;text-align:center;max-width:90%';
+      header.textContent = name;
+
+      var img = document.createElement('img');
+      img.src = url;
+      img.alt = name;
+      img.style.cssText = 'max-width:90%;max-height:80vh;border-radius:8px;box-shadow:0 8px 32px rgba(0,0,0,0.4)';
+      img.onclick = function(e) { e.stopPropagation(); };
+
+      var closeBtn = document.createElement('button');
+      closeBtn.innerHTML = '&times;';
+      closeBtn.style.cssText = 'position:absolute;top:20px;right:28px;background:none;border:none;color:white;font-size:36px;cursor:pointer;opacity:0.8';
+      closeBtn.onclick = function() { overlay.remove(); };
+
+      overlay.appendChild(closeBtn);
+      overlay.appendChild(header);
+      overlay.appendChild(img);
+      document.body.appendChild(overlay);
+    }
+
+    // Status badge generator (reuse same colors as active jobs table)
+    function getStatusBadge(status) {
+      var s = (status || '').toString();
+      var bg = '#f3f4f6', color = '#374151';
+      if (/in progress/i.test(s)) { bg = '#e6f7ff'; color = '#0369a1'; }
+      else if (/pending/i.test(s)) { bg = '#fff7ed'; color = '#92400e'; }
+      else if (/planning/i.test(s)) { bg = '#f8fafc'; color = '#6b7280'; }
+      else if (/not started/i.test(s)) { bg = '#f8fafc'; color = '#6b7280'; }
+      else if (/complete|completed|done/i.test(s)) { bg = '#e6ffed'; color = '#047857'; }
+      return '<span style="background:' + bg + ';color:' + color + ';padding:4px 10px;border-radius:4px;font-size:13px;font-weight:500">' + escapeHtml(s) + '</span>';
+    }
+
+    // HTML escape helper
+    function escapeHtml(str) {
+      var div = document.createElement('div');
+      div.appendChild(document.createTextNode(str));
+      return div.innerHTML;
+    }
+    // Attribute escape helper
+    function escapeAttr(str) {
+      return (str || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
   </script>
 
