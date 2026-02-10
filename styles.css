@@ -211,7 +211,7 @@ body {
 
 .stat-content p {
     font-size: 0.875rem;
-    color: #1a1a1a;
+    color: #eb0d0d;
     font-weight: 500;
 }
 
@@ -234,7 +234,7 @@ body {
 }
 
 .feature-card {
-    background: #1a1a1a !important;
+    background: #000000 !important;
     padding: var(--spacing-md);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-md);
@@ -600,7 +600,7 @@ body {
 
 /* Readability fixes: ensure text contrast in cards is high and visible without hover */
 .feature-card {
-    background-color: #1a1a1a !important;
+    background-color: #000000 !important;
     color: white !important;
 }
 .feature-card .feature-content h3,
@@ -647,6 +647,12 @@ body {
     color: white !important;
 }
 
+/* The detail modal uses a white background—ensure its text stays dark */
+#detailModal,
+#detailModal * {
+    color: #333333 !important;
+}
+
 /* Hide feature icons in the Features grid */
 .feature-card .feature-icon,
 .feature-card img,
@@ -682,4 +688,16 @@ body {
 /* Override welcome title to black font */
 #welcomeTitle {
     color: black !important;
+}
+
+/* Make the second stat card (Pending Inspections) visually distinct and red */
+#statsSection .stat-card:nth-child(2) {
+    background: var(--error-red) !important;
+    border-color: rgba(0,0,0,0.06) !important;
+}
+#statsSection .stat-card:nth-child(2) h3 {
+    color: white !important;
+}
+#statsSection .stat-card:nth-child(2) p {
+    color: rgba(255,255,255,0.92) !important;
 }

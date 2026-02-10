@@ -1,4 +1,4 @@
-git commit -m "Update dashboard and login styling - black feature cards, white text, centered form"// Demo Data Configuration
+git commit -m "Update dashboard and login styling - red feature cards, white text, centered form"// Demo Data Configuration
 // This file contains sample data for demonstrating the dashboard with realistic scenarios
 
 const demoData = {
@@ -32,6 +32,22 @@ const demoData = {
             specialties: ["Residential Roofing", "Metal Roofing", "Warranty Services"]
         }
     ],
+
+    // Documents associated with jobs (product specs, photos, uploads)
+    jobDocuments: {
+        "JOB2024-0156": [
+            { type: "Product Document", name: "TPO Spec Sheet.pdf", url: "docs/JOB2024-0156-tpo-spec.pdf", uploadedBy: "John Smith", uploadedAt: "2024-01-12" },
+            { type: "Photo", name: "Site-Before.jpg", url: "https://via.placeholder.com/800x480?text=JOB2024-0156+Before", uploadedBy: "Foreman", uploadedAt: "2024-01-14" },
+            { type: "Photo", name: "Site-Progress-01.jpg", url: "https://via.placeholder.com/800x480?text=JOB2024-0156+Progress+1", uploadedBy: "Crew", uploadedAt: "2024-02-01" }
+        ],
+        "JOB2024-0157": [
+            { type: "Product Document", name: "Metal Panel Data.pdf", url: "docs/JOB2024-0157-metal-data.pdf", uploadedBy: "Sarah Johnson", uploadedAt: "2024-01-20" }
+        ],
+        "JOB2024-0158": [
+            { type: "Warranty Document", name: "EPDM Warranty.pdf", url: "docs/JOB2024-0158-warranty.pdf", uploadedBy: "Admin", uploadedAt: "2024-01-29" },
+            { type: "Photo", name: "Final.jpg", url: "https://via.placeholder.com/800x480?text=JOB2024-0158+Final", uploadedBy: "Inspector", uploadedAt: "2024-01-28" }
+        ]
+    },
 
     jobs: [
         {

@@ -15,7 +15,8 @@
     h2{margin:0 0 8px}
     .projects li{margin:10px 0;padding:10px;border-radius:8px;border:1px solid #eef7f6;list-style:none}
     .actions{display:flex;gap:8px;margin-top:12px}
-    .btn{padding:10px 12px;border-radius:8px;border:none;background:#1a1a1a;color:white;cursor:pointer}
+    .btn{padding:10px 12px;border-radius:8px;border:none;background:#c62828;color:white;cursor:pointer}
+    .doc-btn{padding:8px 10px;border-radius:6px;border:none;background:#0b84a5;color:white;cursor:pointer;font-size:13px}
     .secondary{background:#eef7f6;color:#0f2430}
     .muted{color:#6b6b6b}
     .meta{font-size:13px;color:#586a6b}
@@ -25,7 +26,7 @@
 <body>
   <div class="topbar">
     <div class="brand">
-      <div style="width:44px;height:44px;border-radius:8px;background:#1a1a1a;display:flex;align-items:center;justify-content:center;font-weight:700">C</div>
+      <div style="width:44px;height:44px;border-radius:8px;background:#c62828;display:flex;align-items:center;justify-content:center;font-weight:700">C</div>
       <div>
         <div style="font-weight:700">Carlisle</div>
         <div style="font-size:12px;opacity:0.9">Contractor Dashboard</div>
@@ -49,22 +50,18 @@
       </div>
     </div>
 
-    <section id="statsSection" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px">
-      <div class="stat-card" style="display:flex;flex-direction:column;align-items:flex-start;padding:12px">
-        <h3>—</h3>
-        <p class="muted">Stat</p>
+    <section id="statsSection" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px">
+      <div class="stat-card" style="display:flex;flex-direction:column;align-items:flex-start;padding:12px;background:#1e3a5f;border-radius:8px;cursor:pointer">
+        <h3 style="font-size:24px;color:#64b5f6;margin:0">—</h3>
+        <p class="muted" style="color:#b0c4de;margin:0">Stat</p>
       </div>
-      <div class="stat-card" style="display:flex;flex-direction:column;align-items:flex-start;padding:12px">
-        <h3>—</h3>
-        <p class="muted">Stat</p>
+      <div class="stat-card" style="display:flex;flex-direction:column;align-items:flex-start;padding:12px;background:#1e3a5f;border-radius:8px;cursor:pointer">
+        <h3 style="font-size:24px;color:#64b5f6;margin:0">—</h3>
+        <p class="muted" style="color:#b0c4de;margin:0">Stat</p>
       </div>
-      <div class="stat-card" style="display:flex;flex-direction:column;align-items:flex-start;padding:12px">
-        <h3>—</h3>
-        <p class="muted">Stat</p>
-      </div>
-      <div class="stat-card" style="display:flex;flex-direction:column;align-items:flex-start;padding:12px">
-        <h3>—</h3>
-        <p class="muted">Stat</p>
+      <div class="stat-card" style="display:flex;flex-direction:column;align-items:flex-start;padding:12px;background:#1e3a5f;border-radius:8px;cursor:pointer">
+        <h3 style="font-size:24px;color:#64b5f6;margin:0">—</h3>
+        <p class="muted" style="color:#b0c4de;margin:0">Stat</p>
       </div>
     </section>
 
@@ -86,7 +83,33 @@
         <!-- Permissions panel intentionally removed -->
       </aside>
     </div>
+
+    <!-- Detail Modal for Stat Card Drill-Down -->
+    <div id="detailModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);z-index:1000;padding:20px">
+      <div style="background:white;border-radius:10px;max-width:800px;margin:50px auto;padding:30px;max-height:80vh;overflow-y:auto">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+          <h2 id="detailTitle" style="color:black;margin:0">Details</h2>
+          <button onclick="closeDetailModal()" style="background:none;border:none;font-size:24px;cursor:pointer">&times;</button>
+        </div>
+        <div id="detailContent" style="color:#333">
+          <!-- Content populated by JavaScript -->
+        </div>
+      </div>
+    </div>
   </main>
+
+    <!-- Documents Modal for Job-specific files/photos -->
+    <div id="docModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);z-index:1100;padding:20px">
+      <div style="background:white;border-radius:10px;max-width:900px;margin:50px auto;padding:24px;max-height:80vh;overflow-y:auto">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <h2 id="docModalTitle" style="color:black;margin:0">Documents</h2>
+          <button onclick="closeDocModal()" style="background:none;border:none;font-size:24px;cursor:pointer">&times;</button>
+        </div>
+        <div id="docModalContent" style="color:#333">
+          <!-- Populated by openJobDocuments(jobId) -->
+        </div>
+      </div>
+    </div>
 
   <!-- Load roleConfig and main app logic, then finish session wiring -->
   <script src="roleConfig.js"></script>
@@ -105,7 +128,7 @@
   </script>
 
   <script src="app.js"></script>
-
+ 
   <script>
     // After app.js initializes, wire session and set role
     (function finishInit(){
@@ -143,6 +166,245 @@
         sessionStorage.removeItem('demoUser');
         location.href = 'index.html';
       });
+
+      // Make stat cards clickable for drill-down
+      attachStatCardListeners();
+    })();
+  </script>
+
+  <script>
+    // Sample data for drill-down detail views
+    const detailData = {
+      activeJobs: [
+          { id: '2024-0156', name: 'Commercial Building Reroof', status: 'In Progress', date: '2024-02-05', documents: [
+            { type: 'Product Document', name: 'Spec Sheet.pdf', url: 'docs/2024-0156-spec.pdf' },
+            { type: 'Photo', name: 'Before.jpg', url: 'https://via.placeholder.com/320x200?text=Before+2024-0156' },
+            { type: 'Photo', name: 'After.jpg', url: 'https://via.placeholder.com/320x200?text=After+2024-0156' }
+          ] },
+          { id: '2024-0155', name: 'Residential Roof Replacement', status: 'In Progress', date: '2024-02-04', documents: [
+            { type: 'Product Document', name: 'Shingle Data.pdf', url: 'docs/2024-0155-shingle.pdf' },
+            { type: 'Photo', name: 'Site.jpg', url: 'https://via.placeholder.com/320x200?text=Site+2024-0155' }
+          ] },
+          { id: '2024-0154', name: 'Industrial Facility Roofing', status: 'In Progress', date: '2024-02-03', documents: [
+            { type: 'Product Document', name: 'Membrane Spec.pdf', url: 'docs/2024-0154-membrane.pdf' },
+            { type: 'Photo', name: 'Overview.jpg', url: 'https://via.placeholder.com/320x200?text=Overview+2024-0154' }
+          ] },
+          { id: '2024-0153', name: 'Mall Roof Repair', status: 'Pending', date: '2024-02-02', documents: [
+            { type: 'Product Document', name: 'Repair Plan.pdf', url: 'docs/2024-0153-plan.pdf' }
+          ] },
+          { id: '2024-0152', name: 'Office Complex Reroof', status: 'Pending', date: '2024-02-01', documents: [
+            { type: 'Photo', name: 'Access Point.jpg', url: 'https://via.placeholder.com/320x200?text=Access+2024-0152' }
+          ] },
+          { id: '2024-0151', name: 'Warehouse Roof Maintenance', status: 'Pending', date: '2024-01-31', documents: [
+            { type: 'Product Document', name: 'Maintenance Checklist.pdf', url: 'docs/2024-0151-checklist.pdf' }
+          ] },
+          { id: '2024-0150', name: 'High-Rise Building Inspection', status: 'Planning', date: '2024-01-30', documents: [
+            { type: 'Product Document', name: 'Inspection Criteria.pdf', url: 'docs/2024-0150-criteria.pdf' }
+          ] },
+          { id: '2024-0149', name: 'School Roof Assessment', status: 'Planning', date: '2024-01-29', documents: [
+            { type: 'Photo', name: 'North Wing.jpg', url: 'https://via.placeholder.com/320x200?text=North+Wing+2024-0149' }
+          ] },
+          { id: '2024-0148', name: 'Healthcare Facility Roofing', status: 'Planning', date: '2024-01-28', documents: [
+            { type: 'Product Document', name: 'Material Datasheet.pdf', url: 'docs/2024-0148-datasheet.pdf' }
+          ] },
+          { id: '2024-0147', name: 'Retail Building Repair', status: 'Planning', date: '2024-01-27', documents: [
+            { type: 'Photo', name: 'Entrance.jpg', url: 'https://via.placeholder.com/320x200?text=Entrance+2024-0147' }
+          ] },
+          { id: '2024-0146', name: 'Government Building Reroof', status: 'Not Started', date: '2024-01-26', documents: [
+            { type: 'Product Document', name: 'Bid Docs.pdf', url: 'docs/2024-0146-bid.pdf' }
+          ] },
+          { id: '2024-0145', name: 'Apartment Complex Maintenance', status: 'Not Started', date: '2024-01-25', documents: [
+            { type: 'Product Document', name: 'Warranty Info.pdf', url: 'docs/2024-0145-warranty.pdf' }
+          ] }
+      ],
+      pendingInspections: [
+        { id: 'INS-2024-045', job: 'Commercial Building Reroof', scheduled: '2024-02-15', inspector: 'John Smith' },
+        { id: 'INS-2024-044', job: 'Residential Roof Replacement', scheduled: '2024-02-14', inspector: 'Sarah Johnson' },
+        { id: 'INS-2024-043', job: 'Industrial Facility Roofing', scheduled: '2024-02-13', inspector: 'Mike Davis' }
+      ],
+      registeredWarranties: [
+        { id: 'WAR-2024-087', product: 'TPO Membrane 60 mil', coverage: '25 Years', registered: '2024-02-08' },
+        { id: 'WAR-2024-086', product: 'Metal Standing Seam', coverage: '30 Years', registered: '2024-02-07' },
+        { id: 'WAR-2024-085', product: 'Modified Bitumen', coverage: '20 Years', registered: '2024-02-06' },
+        { id: 'WAR-2024-084', product: 'Asphalt Shingles', coverage: '25 Years', registered: '2024-02-05' },
+        { id: 'WAR-2024-083', product: 'EPDM Membrane', coverage: '20 Years', registered: '2024-02-04' },
+        { id: 'WAR-2024-082', product: 'PVC Membrane', coverage: '25 Years', registered: '2024-02-03' },
+        { id: 'WAR-2024-081', product: 'Wood Shake', coverage: '30 Years', registered: '2024-02-02' },
+        { id: 'WAR-2024-080', product: 'Tile Roofing', coverage: '50 Years', registered: '2024-02-01' },
+        { id: 'WAR-2024-079', product: 'TPO Membrane 60 mil', coverage: '25 Years', registered: '2024-01-31' },
+        { id: 'WAR-2024-078', product: 'Metal Shingles', coverage: '35 Years', registered: '2024-01-30' },
+        { id: 'WAR-2024-077', product: 'Liquid Applied Membrane', coverage: '15 Years', registered: '2024-01-29' },
+        { id: 'WAR-2024-076', product: 'Built-Up Roofing', coverage: '20 Years', registered: '2024-01-28' },
+        { id: 'WAR-2024-075', product: 'Green/Living Roof', coverage: '25 Years', registered: '2024-01-27' },
+        { id: 'WAR-2024-074', product: 'Slate Roofing', coverage: '50+ Years', registered: '2024-01-26' },
+        { id: 'WAR-2024-073', product: 'Copper Roofing', coverage: '100+ Years', registered: '2024-01-25' },
+        { id: 'WAR-2024-072', product: 'Composite Shingles', coverage: '25 Years', registered: '2024-01-24' },
+        { id: 'WAR-2024-071', product: 'TPO Membrane 80 mil', coverage: '25 Years', registered: '2024-01-23' },
+        { id: 'WAR-2024-070', product: 'Asphalt Roll Roofing', coverage: '15 Years', registered: '2024-01-22' },
+        { id: 'WAR-2024-069', product: 'Metal Roofing Panels', coverage: '40 Years', registered: '2024-01-21' },
+        { id: 'WAR-2024-068', product: 'Architectural Shingles', coverage: '25 Years', registered: '2024-01-20' },
+        { id: 'WAR-2024-067', product: 'Synthetic Slate', coverage: '30 Years', registered: '2024-01-19' },
+        { id: 'WAR-2024-066', product: 'TPO Membrane 45 mil', coverage: '20 Years', registered: '2024-01-18' },
+        { id: 'WAR-2024-065', product: 'Premium Asphalt', coverage: '30 Years', registered: '2024-01-17' },
+        { id: 'WAR-2024-064', product: 'Standing Seam Metal', coverage: '50 Years', registered: '2024-01-16' },
+        { id: 'WAR-2024-063', product: 'Elastomeric Coating', coverage: '10 Years', registered: '2024-01-15' },
+        { id: 'WAR-2024-062', product: 'Corrugated Metal', coverage: '30 Years', registered: '2024-01-14' }
+      ]
+    };
+
+    function openDetailModal(type) {
+      const modal = document.getElementById('detailModal');
+      const title = document.getElementById('detailTitle');
+      const content = document.getElementById('detailContent');
+      
+      let data, titleText, columns = [];
+      
+      if (type === 'activeJobs') {
+        data = detailData.activeJobs;
+        titleText = 'Active Jobs (12)';
+        columns = ['ID', 'Name', 'Status', 'Created', 'Docs'];
+      } else if (type === 'pendingInspections') {
+        data = detailData.pendingInspections;
+        titleText = 'Pending Inspections (3)';
+        columns = ['ID', 'Job', 'Scheduled', 'Inspector'];
+      } else if (type === 'registeredWarranties') {
+        data = detailData.registeredWarranties;
+        titleText = 'Registered Warranties (28)';
+        columns = ['ID', 'Product', 'Coverage', 'Registered'];
+      }
+      
+      title.textContent = titleText;
+      
+      let html = '<table style="width:100%;border-collapse:collapse;font-size:14px">';
+      html += '<tr style="background:#f0f0f0;border-bottom:1px solid #ddd">';
+      columns.forEach(col => {
+        html += `<th style="padding:10px;text-align:left;font-weight:600;color:#333">${col}</th>`;
+      });
+      html += '</tr>';
+      
+      data.forEach((item, idx) => {
+        const rowBg = idx % 2 === 0 ? 'background:#fafafa' : '';
+        if (type === 'activeJobs') {
+          // make entire row clickable to open job documents (also keep View Docs button)
+          html += `<tr tabindex="0" role="button" title="Open documents for ${item.id}" onclick="openJobDocuments('${item.id}')" onkeydown="if(event.key==='Enter'){openJobDocuments('${item.id}') }" style="cursor:pointer;border-bottom:1px solid #eee;${rowBg}">`;
+          html += `<td style="padding:10px">${item.id}</td>`;
+          html += `<td style="padding:10px">${item.name}</td>`;
+          // color-code status badges
+          (function(){
+            const s = (item.status || '').toString();
+            let statusHtml = '<span style="background:#f3f4f6;color:#374151;padding:4px 8px;border-radius:4px">' + s + '</span>';
+            if (/in progress/i.test(s)) {
+              statusHtml = '<span style="background:#e6f7ff;color:#0369a1;padding:4px 8px;border-radius:4px">' + s + '</span>';
+            } else if (/pending/i.test(s)) {
+              statusHtml = '<span style="background:#fff7ed;color:#92400e;padding:4px 8px;border-radius:4px">' + s + '</span>';
+            } else if (/planning/i.test(s)) {
+              statusHtml = '<span style="background:#f8fafc;color:#6b7280;padding:4px 8px;border-radius:4px">' + s + '</span>';
+            } else if (/not started/i.test(s)) {
+              statusHtml = '<span style="background:#f8fafc;color:#6b7280;padding:4px 8px;border-radius:4px">' + s + '</span>';
+            } else if (/complete|completed|done/i.test(s)) {
+              statusHtml = '<span style="background:#e6ffed;color:#047857;padding:4px 8px;border-radius:4px">' + s + '</span>';
+            }
+            html += '<td style="padding:10px">' + statusHtml + '</td>';
+          })();
+          html += `<td style="padding:10px">${item.date}</td>`;
+          html += `<td style="padding:10px"><button class="doc-btn" onclick="event.stopPropagation(); openJobDocuments('${item.id}')">View Docs</button></td>`;
+        } else {
+          html += `<tr style="border-bottom:1px solid #eee;${rowBg}">`;
+          if (type === 'pendingInspections') {
+            html += `<td style="padding:10px">${item.id}</td>`;
+            html += `<td style="padding:10px">${item.job}</td>`;
+            html += `<td style="padding:10px">${item.scheduled}</td>`;
+            html += `<td style="padding:10px">${item.inspector}</td>`;
+          } else if (type === 'registeredWarranties') {
+            html += `<td style="padding:10px">${item.id}</td>`;
+            html += `<td style="padding:10px">${item.product}</td>`;
+            html += `<td style="padding:10px">${item.coverage}</td>`;
+            html += `<td style="padding:10px">${item.registered}</td>`;
+          }
+        }
+        html += '</tr>';
+      });
+      html += '</table>';
+      
+      content.innerHTML = html;
+      modal.style.display = 'block';
+    }
+
+    function closeDetailModal() {
+      document.getElementById('detailModal').style.display = 'none';
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('detailModal').addEventListener('click', function(e) {
+      if (e.target === this) closeDetailModal();
+    });
+
+    function attachStatCardListeners() {
+      const statsSection = document.getElementById('statsSection');
+      if (!statsSection) return;
+      
+      const cards = statsSection.querySelectorAll('.stat-card');
+      cards.forEach((card, idx) => {
+        card.style.cursor = 'pointer';
+        card.style.transition = 'all 200ms ease';
+        if (idx === 0) {
+          card.addEventListener('click', () => openDetailModal('activeJobs'));
+          card.title = 'Click to view all Active Jobs';
+        } else if (idx === 1) {
+          card.addEventListener('click', () => openDetailModal('pendingInspections'));
+          card.title = 'Click to view all Pending Inspections';
+        } else if (idx === 2) {
+          card.addEventListener('click', () => openDetailModal('registeredWarranties'));
+          card.title = 'Click to view all Registered Warranties';
+        }
+        card.addEventListener('mouseenter', () => {
+          card.style.transform = 'translateY(-2px)';
+          card.style.boxShadow = '0 10px 20px rgba(0,0,0,0.15)';
+        });
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = 'translateY(0)';
+          card.style.boxShadow = 'none';
+        });
+      });
+    }
+  </script>
+
+  <script>
+    // After app.js initializes, wire session and set role (original code)
+    (function finishInit(){
+      const session = sessionStorage.getItem('demoUser');
+      if(!session){
+        location.href = 'index.html';
+        return;
+      }
+      const user = JSON.parse(session || '{}');
+
+      function normalize(roleLabel){
+        return (roleLabel || '').toString().toLowerCase().replace(/\s+/g,'-');
+      }
+
+      const roleKey = normalize(user.role) || 'contractor';
+      const roleDropdown = document.getElementById('userRole');
+      if(roleDropdown){
+        if(Array.from(roleDropdown.options).some(o=>o.value===roleKey)){
+          roleDropdown.value = roleKey;
+        }
+      }
+
+      const userInfo = document.getElementById('userInfo');
+      if(userInfo) userInfo.textContent = (user.name || user.email || '') + ' • ' + (user.role || '');
+
+      if(typeof updateDashboard === 'function'){
+        updateDashboard(roleKey);
+      }
+
+      document.getElementById('signOut').addEventListener('click', ()=>{
+        sessionStorage.removeItem('demoUser');
+        location.href = 'index.html';
+      });
+
+      // Make stat cards interactive
+      attachStatCardListeners();
     })();
   </script>
 </body>
