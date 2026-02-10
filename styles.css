@@ -211,7 +211,7 @@ body {
 
 .stat-content p {
     font-size: 0.875rem;
-    color: #eb0d0d;
+    color: #1a1a1a;
     font-weight: 500;
 }
 
@@ -234,7 +234,7 @@ body {
 }
 
 .feature-card {
-    background: #c62828 !important;
+    background: #1a1a1a !important;
     padding: var(--spacing-md);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-md);
@@ -600,7 +600,7 @@ body {
 
 /* Readability fixes: ensure text contrast in cards is high and visible without hover */
 .feature-card {
-    background-color: #c62828 !important;
+    background-color: #1a1a1a !important;
     color: white !important;
 }
 .feature-card .feature-content h3,
@@ -622,7 +622,7 @@ body {
 /* Reduce opacity on disabled cards but keep text readable */
 .feature-card.disabled {
     opacity: 0.9;
-    background-color: #8f1a1a !important;
+    background-color: #333333 !important;
 }
 
 /* Ensure text is fully opaque and high-contrast across cards */
