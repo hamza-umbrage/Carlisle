@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Carlisle CCM" />
+  <meta name="theme-color" content="#0f172a" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <title>Carlisle — Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <div class="logo">
+        <h1>Carlisle CCM</h1>
+        <span class="tagline">Contractor & Project Management Portal</span>
+      </div>
+      <div class="header-user">
+        <span class="header-user-name" id="headerUserName"></span>
+        <button type="button" class="header-profile-btn" id="profileBtn">Profile</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation Bar -->
+  <nav class="nav-bar">
+    <div class="nav-content">
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#" class="nav-link active" data-section="dashboard">Dashboard</a></li>
+        <li><a href="#" class="nav-link" data-section="jobs">Jobs</a></li>
+        <li><a href="#" class="nav-link" data-section="inspections">Inspections</a></li>
+        <li><a href="#" class="nav-link" data-section="warranties">Warranties</a></li>
+        <li><a href="#" class="nav-link" data-section="documents">Documents</a></li>
+        <li id="navAdminItem" class="nav-hidden"><a href="#" class="nav-link" data-section="admin">Admin</a></li>
+        <li><a href="#" class="nav-link" data-section="support">Support</a></li>
+      </ul>
+      <button type="button" id="logoutBtn" class="nav-logout" onclick="API.logout().then(function(){location.href='index.html'})">Log Out</button>
+    </div>
+  </nav>
+
+  <!-- Dashboard -->
+  <main class="dashboard">
+
+    <!-- Welcome -->
+    <section class="welcome-section">
+      <h2 id="welcomeTitle">Welcome</h2>
+    </section>
+
+    <!-- Stats -->
+    <section class="stats-grid" id="statsSection">
+      <div class="stat-card stat-green" data-stat="activeJobs">
+        <div class="stat-content">
+          <h3>—</h3>
+          <p>Active Jobs</p>
+          <span class="stat-detail" id="detailActiveJobs"></span>
+        </div>
+      </div>
+      <div class="stat-card stat-red" data-stat="pendingInspections">
+        <div class="stat-content">
+          <h3>—</h3>
+          <p>Pending Inspections</p>
+          <span class="stat-detail" id="detailPendingInspections"></span>
+        </div>
+      </div>
+      <div class="stat-card stat-blue" data-stat="completedWarranties">
+        <div class="stat-content">
+          <h3>—</h3>
+          <p>Registered Warranties</p>
+          <span class="stat-detail" id="detailWarranties"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features-section">
+      <h2>Available Features</h2>
+      <div class="features-grid" id="featuresGrid"></div>
+    </section>
+
+    <!-- Activity -->
+    <section class="activity-section" id="activitySection">
+      <h2>Recent Activity</h2>
+      <div class="activity-list" id="activityList"></div>
+    </section>
+
+  </main>
+
+  <!-- Jobs Section -->
+  <section id="sectionJobs" class="content-section nav-hidden">
+    <div class="section-toolbar">
+      <h2>Jobs</h2>
+      <div class="section-actions">
+        <div class="search-bar"><input type="text" id="jobsSearch" placeholder="Search jobs..."></div>
+        <button id="createJobBtn" class="btn btn-primary btn-sm nav-hidden">+ New Job</button>
+      </div>
+    </div>
+    <div class="filter-bar" id="jobsFilterBar">
+      <span class="filter-chip active" data-filter="all">All</span>
+      <span class="filter-chip" data-filter="Planning">Planning</span>
+      <span class="filter-chip" data-filter="In Progress">In Progress</span>
+      <span class="filter-chip" data-filter="Completed">Completed</span>
+    </div>
+    <div id="jobsListContainer" class="jobs-list"></div>
+  </section>
+
+  <!-- Inspections Section -->
+  <section id="sectionInspections" class="content-section nav-hidden">
+    <div class="section-toolbar">
+      <h2>Inspections</h2>
+      <div class="section-actions">
+        <div class="search-bar"><input type="text" id="inspectionsSearch" placeholder="Search inspections..."></div>
+        <button id="createInspectionBtn" class="btn btn-primary btn-sm nav-hidden">+ Request Inspection</button>
+      </div>
+    </div>
+    <div class="filter-bar" id="inspectionsFilterBar">
+      <span class="filter-chip active" data-filter="all">All</span>
+      <span class="filter-chip" data-filter="Scheduled">Scheduled</span>
+      <span class="filter-chip" data-filter="Pending">Pending</span>
+      <span class="filter-chip" data-filter="In Progress">In Progress</span>
+      <span class="filter-chip" data-filter="Completed">Completed</span>
+      <span class="filter-chip" data-filter="Passed">Passed</span>
+    </div>
+    <div id="inspectionsListContainer" class="jobs-list"></div>
+  </section>
+
+  <!-- Warranties Section -->
+  <section id="sectionWarranties" class="content-section nav-hidden">
+    <div class="section-toolbar">
+      <h2>Warranties</h2>
+      <div class="section-actions">
+        <div class="search-bar"><input type="text" id="warrantiesSearch" placeholder="Search warranties..."></div>
+        <button id="createWarrantyBtn" class="btn btn-primary btn-sm nav-hidden">+ Register Warranty</button>
+      </div>
+    </div>
+    <div class="filter-bar" id="warrantiesFilterBar">
+      <span class="filter-chip active" data-filter="all">All</span>
+      <span class="filter-chip" data-filter="Active">Active</span>
+      <span class="filter-chip" data-filter="Pending">Pending</span>
+      <span class="filter-chip" data-filter="Expired">Expired</span>
+    </div>
+    <div id="warrantiesListContainer" class="jobs-list"></div>
+  </section>
+
+  <!-- Documents Section -->
+  <section id="sectionDocuments" class="content-section nav-hidden">
+    <div class="section-toolbar">
+      <h2>Documents</h2>
+    </div>
+    <div id="documentsContainer"></div>
+  </section>
+
+  <!-- Admin Section -->
+  <section id="sectionAdmin" class="content-section nav-hidden">
+    <div class="admin-tabs">
+      <button type="button" class="admin-tab active" data-tab="users">User Management</button>
+      <button type="button" class="admin-tab" data-tab="activity">Activity Log</button>
+      <button type="button" class="admin-tab" data-tab="analytics">Analytics</button>
+    </div>
+    <div id="adminContent"></div>
+  </section>
+
+  <!-- Detail Modal -->
+  <div id="detailOverlay" class="modal-overlay" style="display:none">
+    <div class="modal-panel">
+      <div class="modal-header">
+        <h2 id="modalTitle">Details</h2>
+        <button class="modal-close" onclick="closeDetailModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <!-- Document Viewer Modal -->
+  <div id="docOverlay" class="modal-overlay" style="display:none">
+    <div class="modal-panel modal-panel-wide">
+      <div class="modal-header">
+        <button class="modal-back" onclick="closeDocViewer()">&#8249; Back</button>
+        <h2 id="docViewerTitle">Document</h2>
+        <button class="modal-close" onclick="closeDocViewer()">&times;</button>
+      </div>
+      <div class="modal-body" id="docViewerBody"></div>
+    </div>
+  </div>
+
+  <!-- Confirm Dialog -->
+  <div id="confirmOverlay" class="modal-overlay" style="display:none">
+    <div class="modal-panel confirm-panel">
+      <div class="modal-header">
+        <h2 id="confirmTitle">Confirm</h2>
+        <button class="modal-close" onclick="document.getElementById('confirmOverlay').style.display='none'">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p id="confirmMessage"></p>
+      </div>
+      <div class="confirm-actions">
+        <button id="confirmCancel" class="btn btn-secondary">Cancel</button>
+        <button id="confirmOk" class="btn btn-danger">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notifications -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>&copy; 2024 Carlisle Construction Materials. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Support</a>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="api.js"></script>
+  <script src="demoData.js"></script>
+  <script src="roleConfig.js"></script>
+  <script src="ui.js"></script>
+  <script src="app.js"></script>
+
+  <script>
+    // Session init
+    (function finishInit(){
+      var user = API.getUser();
+      if (!user) {
+        location.href = 'index.html';
+        return;
+      }
+      var roleKey = user.roleKey || user.role || 'contractor';
+      window._userName = user.name || '';
+      if (typeof updateDashboard === 'function') {
+        updateDashboard(roleKey);
+      }
+    })();
+  </script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js');
+    }
+  </script>
+</body>
+</html>

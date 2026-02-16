@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Carlisle CCM" />
+  <meta name="theme-color" content="#0f172a" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <title>Carlisle — Create Account</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    :root{--accent:#c62828;--muted:#6b6b6b}
+    body{font-family:Inter, system-ui, -apple-system, Arial, sans-serif;background:#f6faf9;margin:0;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px 0}
+    .card{width:480px;max-width:96%;background:white;border-radius:14px;box-shadow:0 6px 30px rgba(20,20,20,0.12);padding:32px;margin:0 auto}
+    .brand{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+    .brand img{height:36px}
+    h1{margin:0 0 6px 0;font-size:20px}
+    p.lead{margin:0;color:var(--muted);font-size:13px}
+    label{display:block;font-weight:600;margin:12px 0 6px;font-size:13px}
+    input,select{width:100%;padding:12px;border-radius:8px;border:1px solid #e6efee;background:white;font-size:14px;font-family:inherit;box-sizing:border-box}
+    select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b6b6b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;cursor:pointer}
+    .btn{display:inline-block;background:var(--accent);color:white;padding:12px 18px;border-radius:8px;border:none;width:100%;font-weight:700;margin-top:14px;cursor:pointer;font-size:14px}
+    .btn:disabled{opacity:0.6;cursor:not-allowed}
+    .form-error{color:var(--accent);font-size:13px;margin:8px 0 0;display:none}
+    .form-link{color:var(--muted);font-size:13px;text-align:center;margin-top:14px}
+    .form-link a{color:var(--accent);text-decoration:none;font-weight:600}
+    .contractor-fields{display:none}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width:500px){.row{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="card" role="main">
+    <div class="brand">
+      <img src="Carlisle%20logo.avif" alt="Carlisle logo">
+      <div>
+        <h1>Create Account</h1>
+        <p class="lead">Join the Carlisle CCM portal</p>
+      </div>
+    </div>
+
+    <form id="registerForm" onsubmit="return false;" aria-label="Registration form">
+      <div class="row">
+        <div>
+          <label for="name">Full Name</label>
+          <input id="name" type="text" placeholder="John Smith" required>
+        </div>
+        <div>
+          <label for="phone">Phone (optional)</label>
+          <input id="phone" type="tel" placeholder="(555) 123-4567">
+        </div>
+      </div>
+
+      <label for="email">Email</label>
+      <input id="email" type="email" placeholder="you@company.com" required>
+
+      <label for="password">Password</label>
+      <input id="password" type="password" placeholder="At least 6 characters" required>
+
+      <label for="role">Account Type</label>
+      <select id="role">
+        <option value="contractor">Contractor</option>
+        <option value="inspector">Field Inspector</option>
+      </select>
+
+      <div id="contractorFields" class="contractor-fields">
+        <label for="companyName">Company Name</label>
+        <input id="companyName" type="text" placeholder="ABC Roofing Solutions">
+      </div>
+
+      <p id="formError" class="form-error"></p>
+
+      <button type="button" id="registerBtn" class="btn">Create Account</button>
+    </form>
+
+    <p class="form-link">Already have an account? <a href="index.html">Sign in</a></p>
+  </div>
+
+  <script src="api.js"></script>
+  <script>
+    const roleEl = document.getElementById('role');
+    const contractorFields = document.getElementById('contractorFields');
+    const errorEl = document.getElementById('formError');
+    const registerBtn = document.getElementById('registerBtn');
+
+    // Show/hide contractor-specific fields
+    roleEl.addEventListener('change', () => {
+      contractorFields.style.display = roleEl.value === 'contractor' ? 'block' : 'none';
+    });
+    // Show on load since contractor is default
+    contractorFields.style.display = 'block';
+
+    registerBtn.addEventListener('click', async () => {
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim().toLowerCase();
+      const password = document.getElementById('password').value;
+      const phone = document.getElementById('phone').value.trim();
+      const role = roleEl.value;
+      const companyName = document.getElementById('companyName').value.trim();
+
+      errorEl.style.display = 'none';
+
+      if (!name || !email || !password) {
+        errorEl.textContent = 'Please fill in all required fields.';
+        errorEl.style.display = 'block';
+        return;
+      }
+
+      if (password.length < 6) {
+        errorEl.textContent = 'Password must be at least 6 characters.';
+        errorEl.style.display = 'block';
+        return;
+      }
+
+      if (role === 'contractor' && !companyName) {
+        errorEl.textContent = 'Company name is required for contractor accounts.';
+        errorEl.style.display = 'block';
+        return;
+      }
+
+      registerBtn.disabled = true;
+      registerBtn.textContent = 'Creating account...';
+
+      try {
+        const res = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, password, phone, role, companyName }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.error || 'Registration failed');
+        }
+
+        // Save session (same as login)
+        sessionStorage.setItem('token', data.token);
+        sessionStorage.setItem('refreshToken', data.refreshToken);
+        sessionStorage.setItem('user', JSON.stringify(data.user));
+
+        location.href = 'contractor-dashboard.html';
+      } catch (err) {
+        errorEl.textContent = err.message || 'Something went wrong. Please try again.';
+        errorEl.style.display = 'block';
+        registerBtn.disabled = false;
+        registerBtn.textContent = 'Create Account';
+      }
+    });
+  </script>
+</body>
+</html>

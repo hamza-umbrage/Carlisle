@@ -1,0 +1,113 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Carlisle CCM" />
+  <meta name="theme-color" content="#0f172a" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <title>Carlisle — Login</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Minimal page-specific styles to ensure layout looks good even without full project CSS */
+    :root{--accent:#c62828;--muted:#6b6b6b}
+    body{font-family:Inter, system-ui, -apple-system, Arial, sans-serif;background:#f6faf9;margin:0;display:flex;align-items:center;justify-content:center;height:100vh}
+    .card{width:480px;max-width:96%;background:white;border-radius:14px;box-shadow:0 6px 30px rgba(20,20,20,0.12);padding:32px;margin:0 auto}
+    .brand{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+    .brand img{height:36px}
+    h1{margin:0 0 6px 0;font-size:20px}
+    p.lead{margin:0;color:var(--muted);font-size:13px}
+    .grid{display:grid;grid-template-columns:1fr;gap:24px}
+    .left{padding-right:0}
+    label{display:block;font-weight:600;margin:12px 0 6px;font-size:13px}
+    input{width:100%;padding:12px;border-radius:8px;border:1px solid #e6efee;background:white}
+    .btn{display:inline-block;background:var(--accent);color:white;padding:12px 18px;border-radius:8px;border:none;width:100%;font-weight:700;margin-top:14px;cursor:pointer}
+    .muted{color:var(--muted);font-size:13px;text-align:center;margin-top:8px}
+    .login-error{color:var(--accent);font-size:13px;margin:8px 0 0;display:none}
+    .muted a{color:var(--accent);font-weight:600;text-decoration:none}
+    .forgot-pw{margin-top:4px}
+    @media(max-width:880px){.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="card" role="main">
+    <div class="brand">
+      <img src="Carlisle%20logo.avif" alt="Carlisle logo">
+      <div>
+        <h1>Welcome back</h1>
+        <p class="lead">Sign in to access your projects</p>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="left">
+        <form id="loginForm" onsubmit="return false;" aria-label="Sign in form">
+          <label for="email">Email</label>
+          <input id="email" type="email" placeholder="you@company.com">
+
+          <label for="password">Password</label>
+          <input id="password" type="password" placeholder="Password">
+
+          <p id="loginError" class="login-error"></p>
+
+          <button type="button" id="signInBtn" class="btn">Sign In</button>
+        </form>
+        <p class="muted forgot-pw"><a href="#" id="forgotPwLink">Forgot password?</a></p>
+        <p class="muted">Don't have an account? <a href="register.html">Create one</a></p>
+      </div>
+
+
+    </div>
+  </div>
+
+  <script src="api.js"></script>
+  <script>
+    const emailEl = document.getElementById('email');
+    const pwEl = document.getElementById('password');
+    const errorEl = document.getElementById('loginError');
+    const signInBtn = document.getElementById('signInBtn');
+
+    document.getElementById('forgotPwLink').addEventListener('click', (e) => {
+      e.preventDefault();
+      errorEl.textContent = 'Please contact your administrator to reset your password.';
+      errorEl.style.display = 'block';
+      errorEl.style.color = '#2563eb';
+    });
+
+    signInBtn.addEventListener('click', async () => {
+      const email = emailEl.value.trim().toLowerCase();
+      const pw = pwEl.value;
+
+      errorEl.style.display = 'none';
+
+      if (!email || !pw) {
+        errorEl.textContent = 'Please enter your email and password.';
+        errorEl.style.display = 'block';
+        return;
+      }
+
+      signInBtn.disabled = true;
+      signInBtn.textContent = 'Signing in...';
+
+      try {
+        await API.login(email, pw);
+        location.href = 'contractor-dashboard.html';
+      } catch (err) {
+        errorEl.textContent = err.message || 'Invalid email or password.';
+        errorEl.style.display = 'block';
+        signInBtn.disabled = false;
+        signInBtn.textContent = 'Sign In';
+      }
+    });
+  </script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js');
+    }
+  </script>
+</body>
+</html>
